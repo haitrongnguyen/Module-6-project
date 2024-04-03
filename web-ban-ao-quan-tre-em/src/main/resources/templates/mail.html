@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form method="post" th:action="@{http://localhost:8080/register/{id}(id=${id})}">
+    <p>Please click button Submit to confirm account.</p>
+    <input type="hidden" name="id" value="123"> <!-- Nếu cần gửi id -->
+    <button type="submit">Submit</button>
+</form>
+</body>
+</html>

@@ -1,0 +1,9 @@
+.slick-prev {
+    background-color: red;
+    /* Màu nền nút prev */
+}
+
+.slick-next {
+    background-color: blue;
+    /* Màu nền nút next */
+}

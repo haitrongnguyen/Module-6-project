@@ -1,0 +1,58 @@
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    /* Điều chỉnh khoảng cách phân trang với nội dung trang */
+}
+
+.pagination li {
+    display: inline-block;
+    margin-right: 5px;
+    /* Khoảng cách giữa các phân trang */
+}
+
+.pagination li a {
+    padding: 5px 10px;
+    /* Kích thước của nút trang */
+    color: #333;
+    /* Màu chữ */
+    background-color: #fff;
+    /* Màu nền */
+    border: 1px solid #ccc;
+    /* Viền */
+    border-radius: 3px;
+    /* Bo góc */
+    text-decoration: none;
+    /* Loại bỏ gạch chân */
+}
+
+.pagination li a:hover {
+    background-color: #f0f0f0;
+    /* Màu nền khi di chuột qua */
+}
+
+.pagination .active a {
+    background-color: rgb(113, 192, 239);
+    /* Màu nền của trang đang được chọn */
+    color: #fff;
+    /* Màu chữ của trang đang được chọn */
+}
+
+.my-swal-closeButton {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.my-swal-confirmButton {
+    padding-bottom: 25px;
+    padding-top: 1px;
+}
+
+.my-swal-cancelButton {
+    padding-bottom: 25px;
+    padding-top: 1px;
+}
+
+.modal-dialog {
+    background-color: white;
+}
