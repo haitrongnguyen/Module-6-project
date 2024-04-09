@@ -18,9 +18,27 @@ const AccountDetail = () => {
     const accessToken = sessionStorage.getItem('accessToken');
     const [imageUpload, setImageUpload] = useState("")
     const [imageUrl, setImageUrl] = useState("")
+    const [flag, setFlag] = useState(false)
     const navigate = useNavigate();
 
-    const uploadImage = () => {
+
+
+
+    const fetchApi = async (id, accessToken) => {
+        try {
+            console.log(id);
+            const result = await service.getAccount(id, accessToken);
+            console.log(result);
+            setAccount(result)
+            console.log(account.email);
+
+            document.title = 'Account Detail';
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    const uploadImage = async () => {
         console.log(imageUpload);
         if (imageUpload == "") return;
         const imageRef = ref(storage, `account/${imageUpload.name + v4()}`);
@@ -34,23 +52,9 @@ const AccountDetail = () => {
 
     }
 
-
     useEffect(() => {
-        const fetchApi = async (id, accessToken) => {
-            try {
-                console.log(id);
-                const result = await service.getAccount(id, accessToken);
-                console.log(result);
-                setAccount(result)
-                console.log(account.email);
-
-                document.title = 'Account Detail';
-            } catch (e) {
-                console.log(e);
-            }
-        };
         fetchApi(idA.id, accessToken)
-        uploadImage()
+        uploadImage(); // Chờ uploadImage hoàn thành trước khi gọi fetchApi
     }, [imageUpload])
     const initValues = {
         email: account.email,
@@ -80,7 +84,8 @@ const AccountDetail = () => {
         }
         console.log(values);
         let res = service.updateAccount(values, accessToken);
-        Swal.fire({
+        setFlag(!flag)
+        await Swal.fire({
             title: "Update Successfully !",
             icon: "success",
             confirmButtonText: "OK",
@@ -102,7 +107,7 @@ const AccountDetail = () => {
                     <h1 class="page-title">Account Detail</h1>
                     <div role="navigation" aria-label="Breadcrumbs" class="breadcrumb-trail breadcrumbs">
                         <ul class="trail-items breadcrumb">
-                            <li class="trail-item trail-begin"><a href="index.html"><span>Home</span></a></li>
+                            <li class="trail-item trail-begin"><Link to={'/'}>Home</Link></li>
                             <li class="trail-item trail-end active"><span>Account Detail</span>
                             </li>
                         </ul>
@@ -122,7 +127,7 @@ const AccountDetail = () => {
                                     </a>
                                 </li>
                                 <li className="nav-item product-remove">
-                                    <Link className="nav-link" to={'/changPassword'}>
+                                    <Link className="nav-link" to={`/changePassword/${account.id}`}>
                                         Change Password
                                     </Link>
                                 </li>
@@ -191,13 +196,26 @@ const AccountDetail = () => {
                                                 </td>
                                             </tr>
 
+                                            {/* <tr>
+                                                <th className="product-remove ">Birthday</th>
+                                                <td className='product-remove'  >
+                                                    <Field className='form-control date' style={{ display: 'flex', justifyContent: 'center' }} type="date" name='birthday' />
+                                                    <ErrorMessage name="birthday" component='p'
+                                                        style={{ color: 'red' }} />
+                                                </td>
+                                            </tr> */}
+
+
                                             <tr>
                                                 <th className="product-remove ">Image</th>
                                                 <td className='product-remove' >
-                                                    <input className="form-control" type="file" id="formFile"
+
+                                                    <input className="form-control" type="file" id="formFile" placeholder='Select file'
                                                         onChange={(event) => {
-                                                            setImageUpload(event.target.files[0])
-                                                            uploadImage();
+                                                            const selectedFile = event.target.files[0];
+                                                            if (selectedFile) {
+                                                                setImageUpload(selectedFile);
+                                                            }
                                                         }} />
                                                 </td>
                                             </tr>
@@ -217,8 +235,12 @@ const AccountDetail = () => {
                         <div className='col-3'>
                             {account.image ? (
                                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px' }}>
+                                    {imageUrl ? (
+                                        <img className='img-thumbnail' src={imageUrl} />
+                                    ) : (
 
-                                    <img className='img-thumbnail' src={account.image} />
+                                        <img className='img-thumbnail' src={account.image} />
+                                    )}
                                 </div>
 
                             ) :

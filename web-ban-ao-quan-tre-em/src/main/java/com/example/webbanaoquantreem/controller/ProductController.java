@@ -1,8 +1,11 @@
 package com.example.webbanaoquantreem.controller;
 
 
+import com.example.webbanaoquantreem.auth.AuthenticationRequest;
+import com.example.webbanaoquantreem.config.ApplicationConfig;
 import com.example.webbanaoquantreem.model.*;
 import com.example.webbanaoquantreem.model.dto.AccountDTO;
+import com.example.webbanaoquantreem.model.dto.ChangePasswordDTO;
 import com.example.webbanaoquantreem.service.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
@@ -12,11 +15,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin("*")
@@ -36,6 +43,12 @@ public class ProductController {
     private ICategoryService categoryService;
     @Autowired
     private ILikeService likeService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private ApplicationConfig applicationConfig;
     @GetMapping("/home")
     public ResponseEntity<Page<Product>> getEmployeeList(@RequestParam(defaultValue = "") String searchName,
 
@@ -212,7 +225,10 @@ public class ProductController {
         }
         cart.setTotalPrice(amount);
         cart.setStatus(true);
+        LocalDate localDate = LocalDate.now();
+        cart.setCreateDate(localDate);
         cartService.save(cart);
+        cartService.sendMail(cart.getAccount(),cart);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -264,6 +280,47 @@ public class ProductController {
         return new ResponseEntity<>("Success. Back to page Login",HttpStatus.OK);
     }
 
+    @PostMapping("/user/changePw")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO){
+        System.out.println("/////////////////////");
+        Optional<Account> account = accountService.findByEmail(changePasswordDTO.getEmail());
+        System.out.println(changePasswordDTO.getEmail());
+        System.out.println(account);
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest(changePasswordDTO.getEmail(),changePasswordDTO.getPassword());
+        if (account.isPresent()){
+            System.out.println("-------------------");
+            System.out.println(accountService.checkLogin(authenticationRequest));
+
+            if (accountService.checkLogin(authenticationRequest)){
+                if (applicationConfig.passwordEncoder().matches(changePasswordDTO.getNewPassword(),account.get().getPassword())){
+                    return new ResponseEntity<>("Password duplicate",HttpStatus.OK);
+                }
+                System.out.println("/aaaaaaaáa");
+                account.get().setPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
+                accountService.save(account.get());
+                return new ResponseEntity<>(true,HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+    }
+
+    @GetMapping("/user/checkQuantity/{cartId}")
+    public ResponseEntity<?>checkQuantity(@PathVariable Long cartId) {
+        List<CartItem> cartItems = cartItemService.findCartItemByCartId(cartId);
+        List<CartItem> newCart = new ArrayList<>();
+        for (CartItem c:
+             cartItems) {
+            if (c.getQuantity() > c.getProduct().getQuantity()){
+                newCart.add(c);
+            }
+        }
+        if (newCart.isEmpty()){
+            return new ResponseEntity<>("Ok",HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(newCart,HttpStatus.OK);
+        }
+    }
 
 
 

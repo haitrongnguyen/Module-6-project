@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as service from "../service/ProductServie"
 import swal from 'sweetalert';
+import './style.css'
+import Swal from "sweetalert2";
 
 const Paypal = (props) => {
     const paypal = useRef();
@@ -23,15 +25,26 @@ const Paypal = (props) => {
                     console.log(id, amount, accessToken);
                     await service.handleSuccess(id, amount, accessToken);
                     navigate(`/`)
-                    swal({
-                        title: "Thông báo",
-                        text: "Bạn đã thanh toán thành công!",
-                        type: "success",
-                        icon: "success",
-                        button: {
-                            text: "OK",
-                        },
-                    });
+                    // swal({
+                    //     title: "Notification",
+                    //     text: "You have successfully paid!",
+                    //     type: "success",
+                    //     icon: "success",
+                    //     confirmButtonText: 'OK', // Thay đổi văn bản của nút OK
+                    //     customClass: {
+                    //         confirmButton: 'my-swal-confirmButton' // Thêm class cho nút OK
+                    //     }
+                    // });
+                    Swal.fire({
+                        title: 'Notification',
+                        text: 'You have successfully paid!',
+                        icon: 'success',
+                        confirmButtonColor: '#3085d6', // Thay đổi màu sắc nút OK
+                        confirmButtonText: 'OK', // Thay đổi văn bản của nút OK
+                        customClass: {
+                            confirmButton: 'my-swal-confirmButton' // Thêm class cho nút OK
+                        }
+                    })
                 },
                 onError: async (err) => {
                     // navigate("/user/information")

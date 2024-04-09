@@ -10,12 +10,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterDTO {
+public class ChangePasswordDTO {
     @NotNull
     private String email;
-
     @NotNull
     private String password;
-    private String address;
-    private String phoneNumber;
+    @NotNull
+    private String newPassword;
+    @NotNull
+    private String confirmPassword;
 }

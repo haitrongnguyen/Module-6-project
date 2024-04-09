@@ -1021,10 +1021,11 @@ const LikedByManyPeople = () => {
                                         >
                                             <div className="product-inner">
                                                 <div className="product-thumb">
-                                                    <a
+                                                    <Link
                                                         className="thumb-link"
                                                         href="single-product.html"
                                                         tabIndex={0}
+                                                        to={`/product/${product.id}`}
                                                     >
                                                         <img
                                                             className="img-responsive"
@@ -1033,7 +1034,7 @@ const LikedByManyPeople = () => {
                                                             width={275}
                                                             height={310}
                                                         />
-                                                    </a>
+                                                    </Link>
                                                 </div>
                                                 <div className="product-info equal-elem">
                                                     <h3 className="product-name product_title">

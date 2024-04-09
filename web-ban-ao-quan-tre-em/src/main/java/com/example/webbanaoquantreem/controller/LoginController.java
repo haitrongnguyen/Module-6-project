@@ -2,10 +2,12 @@ package com.example.webbanaoquantreem.controller;
 
 import com.example.webbanaoquantreem.auth.AuthenticationRequest;
 import com.example.webbanaoquantreem.auth.AuthenticationResponse;
+import com.example.webbanaoquantreem.config.ApplicationConfig;
 import com.example.webbanaoquantreem.config.JwtService;
 import com.example.webbanaoquantreem.model.Account;
 import com.example.webbanaoquantreem.model.Role;
 import com.example.webbanaoquantreem.model.dto.AccountDTO;
+import com.example.webbanaoquantreem.model.dto.ChangePasswordDTO;
 import com.example.webbanaoquantreem.model.dto.LoginDto;
 import com.example.webbanaoquantreem.model.dto.RegisterDTO;
 import com.example.webbanaoquantreem.repository.RoleRepository;
@@ -26,6 +28,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin("*")
@@ -44,6 +48,7 @@ public class LoginController {
 
     @Autowired
     private RoleRepository repository;
+
 
 
 
@@ -100,7 +105,22 @@ public class LoginController {
         accountService.save(account);
         return new ResponseEntity<>("Success. Back to page Login",HttpStatus.OK);
     }
-
-
+//    @PostMapping("/api/user/changePw")
+//    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO){
+//        System.out.println("/////////////////////");
+//        Optional<Account> account = accountService.findByEmail(changePasswordDTO.getEmail());
+//        System.out.println(changePasswordDTO.getEmail());
+//        System.out.println(account);
+//        AuthenticationRequest authenticationRequest = new AuthenticationRequest(changePasswordDTO.getEmail(),changePasswordDTO.getNewPassword());
+//        if (account.isPresent()){
+//            if (accountService.checkLogin(authenticationRequest)){
+//                System.out.println("/aaaaaaaáa");
+//                account.get().setPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
+//                accountService.save(account.get());
+//            }
+//        }
+//        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//
+//    }
 
 }

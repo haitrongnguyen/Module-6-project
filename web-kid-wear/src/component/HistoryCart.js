@@ -197,7 +197,7 @@ const HistoryCart = () => {
                                         <tr>
                                             <td>{cart.id}</td>
                                             <td>{cart.createDate}</td>
-                                            <td>{cart.totalPrice ? cart.totalPrice : "UnPain no have total"}</td>
+                                            <td>{cart.totalPrice ? cart.totalPrice : "UnPain no have total"}<span>$</span></td>
                                             <td>{cart.status ? <span style={{ color: 'blue' }}>Pain</span> : <span style={{ color: 'red' }}>UnPain</span>}</td>
                                             <td>
                                                 <button onClick={() => handleClick(cart)} style={{ backgroundColor: "rgb(113,192,239)" }}>View detail</button>

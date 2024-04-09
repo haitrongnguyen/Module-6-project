@@ -294,5 +294,32 @@ export const deleteProduct = async (id, accessToken) => {
     }
 }
 
+export const changePassword = async (changePasswordDTO, accessToken) => {
+    try {
+        let rs = await axios.post(`http://localhost:8080/api/user/changePw`, changePasswordDTO, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
+        return rs.data
+    } catch (e) {
+        console.log(e);;
+    }
+}
+
+export const checkQuantity = async (cartId, accessToken) => {
+    try {
+        let rs = await axios.get(`http://localhost:8080/api/user/checkQuantity/${cartId}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
+        return rs.data
+    } catch (e) {
+        console.log(e);;
+    }
+}
+
+
 
 

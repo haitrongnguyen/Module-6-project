@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import Header from './Header';
 import Paypal from './Paypal';
 import { ToastContainer, toast } from 'react-toastify';
+import { set } from 'firebase/database';
 
 
 const Cart = () => {
@@ -19,6 +20,7 @@ const Cart = () => {
     const [status, setStatus] = useState(false)
     const userId = sessionStorage.getItem('userId')
     const accessToken = sessionStorage.getItem('accessToken')
+    const [nameProduct, setNameProduct] = useState([])
     useEffect(() => {
         const fetchApi = async (accountId, accessToken) => {
             console.log(userId);
@@ -38,7 +40,7 @@ const Cart = () => {
             }
         };
         fetchApi(userId, accessToken)
-    }, [flag]);
+    }, [flag, nameProduct]);
     const handlePlus = async (cartItem, id) => {
         await service.plusQuantity(id, accessToken)
         setFlag(!flag)
@@ -88,6 +90,54 @@ const Cart = () => {
     }
     const handleDelete = async (cartItem) => {
         alert(cartItem)
+    }
+    // const handleCheck = async (cartId) => {
+    //     let res = await service.checkQuantity(cartId, accessToken);
+    //     setFlag(!flag)
+    //     console.log(res);
+    //     if (res === "Ok") {
+    //         setShow(true)
+    //     } else {
+    //         const productList = [];
+    //         {
+    //             res.map((cartItem, index) => (
+    //                 productList.push(cartItem.product.name)
+    //             ))
+    //             setNameProduct(productList)
+    //         }
+    //         console.log(productList);
+    //         await Swal.fire({
+    //             title: "Done !",
+    //             icon: "error",
+    //             text: `Product ${nameProduct} don't enought quanlity`,
+    //             confirmButtonText: "OK",
+    //             customClass: {
+    //                 confirmButton: 'my-swal-confirmButton',
+
+    //             }
+    //         });
+    //     }
+    // }
+    const handleCheck = async (cartId) => {
+        let res = await service.checkQuantity(cartId, accessToken);
+        setFlag(!flag)
+        console.log(res);
+        if (res === "Ok") {
+            setShow(true)
+        } else {
+            const productList = res.map((cartItem) => cartItem.product.name);
+            setNameProduct(productList);
+            await Swal.fire({
+                title: "Done !",
+                icon: "error",
+                // Sử dụng giá trị của biến nameProduct tại đây
+                text: `Product ${productList.join(", ")} don't enought quantity`,
+                confirmButtonText: "OK",
+                customClass: {
+                    confirmButton: 'my-swal-confirmButton',
+                }
+            });
+        }
     }
     return (
         <div>
@@ -252,7 +302,7 @@ const Cart = () => {
 
                                                 <div className="kodory-proceed-to-checkout">
                                                     <a
-                                                        onClick={() => setShow(true)}
+                                                        onClick={() => handleCheck(cartId)}
                                                         className="checkout-button button alt kodory-forward"
                                                     >
                                                         Proceed to checkout
