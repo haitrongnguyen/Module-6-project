@@ -57,12 +57,9 @@ public class ProductController {
         Pageable pageable = PageRequest.of(page, 12);
 //        Page<Product> productPage = productService.getAllProduct(searchName, pageable);
         if (categoryId==0){
-            System.out.println("Khong có cate");
             Page<Product> productPage = productService.getAllProduct(searchName, pageable);
             return ResponseEntity.ok(productPage);
         }else {
-            System.out.println(" có cate");
-
             Page<Product> productPage = productService.getAllProductT(searchName, pageable,categoryId);
             if (productPage.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -76,7 +73,6 @@ public class ProductController {
     public ResponseEntity<?> addToCart(@RequestParam Long productId,
                                        @RequestParam Long accountId,
                                        @RequestParam(defaultValue = "1") Long quantity) {
-        System.out.println("cccccccccccccccc");
         Cart cart = cartService.findCart(accountId);
         Account account = accountService.findById(accountId);
         Product product = productService.findById(productId);
@@ -84,14 +80,12 @@ public class ProductController {
         Double price = product.getPrice();
 
         if (cart == null){
-            System.out.println("tao");
             cartService.save(new Cart(date,account,false));
             Cart cart1 = cartService.findCart(accountId);
             CartItem cartItem = new CartItem(price,quantity,false,product,cart1);
             cartItemService.save(cartItem);
 
         }else {
-            System.out.println("save cart");
             List<CartItem> cartItems = cartItemService.findCartItem(cart.getId());
             boolean checkExist = false;
             for(CartItem c: cartItems){
@@ -139,13 +133,11 @@ public class ProductController {
     @GetMapping("/user/cart/sum/{accountId}")
     public ResponseEntity<Double> getSum(@PathVariable Long accountId) {
         Cart cart = cartService.findCart(accountId);
-        System.out.println(cart);
         Double sum = 0.0;
         List<CartItem> cartItems = cartItemService.findCartItem(cart.getId());
         for (CartItem c: cartItems){
             sum= sum + c.getPrice()*c.getQuantity();
         }
-        System.out.println("sum " + sum);
         return new ResponseEntity<>(sum,HttpStatus.OK);
     }
     @GetMapping("/home/product/{id}")
@@ -158,14 +150,12 @@ public class ProductController {
 
         CartItem cartItem = cartItemService.findById(id);
 
-            System.out.println("Cong 1");
             cartItem.setQuantity(cartItem.getQuantity()+1);
             cartItemService.save(cartItem);
             return new ResponseEntity<>(HttpStatus.OK);
     }
     @GetMapping("/user/cart/div/{id}")
     public ResponseEntity<?> divQuantity(@PathVariable Long id) {
-        System.out.println("Tru 1");
         CartItem cartItem = cartItemService.findById(id);
         cartItem.setQuantity(cartItem.getQuantity()-1);
         cartItemService.save(cartItem);
@@ -186,13 +176,11 @@ public class ProductController {
     @GetMapping("/user/like/{productId}/{accountId}")
     public ResponseEntity<?> addLike(@PathVariable Long productId, @PathVariable Long accountId) {
         if(likeService.checkLike(accountId,productId) == null){
-            System.out.println(productId+" "+accountId);
             likeService.addLike(productId, accountId);
             Product product = productService.findById(productId);
             product.setViewer(product.getViewer()+1);
             productService.save(product);
         }else {
-            System.out.println(productId+" "+accountId);
             likeService.deleteByPrAc(productId, accountId);
             Product product = productService.findById(productId);
             product.setViewer(product.getViewer()-1);
@@ -216,7 +204,6 @@ public class ProductController {
     @GetMapping("/user/checkout")
     public ResponseEntity<?>checkout(@RequestParam Long cartId,
                                                 @RequestParam Double amount) {
-        System.out.println("thanh toan" +cartId + " "+amount);
         Cart cart = cartService.findById(cartId);
         List<CartItem> cartItems= cartItemService.findCartItem(cartId);
         for (CartItem c: cartItems){
@@ -243,7 +230,6 @@ public class ProductController {
 
     @PatchMapping("/user/account/update")
     public ResponseEntity<?>updateAccount(@RequestBody @Valid AccountDTO accountDTO, BindingResult bindingResult) {
-        System.out.println(accountDTO.getId());
         Account account = accountService.findById(accountDTO.getId());
             BeanUtils.copyProperties(accountDTO,account);
             accountService.save(account);
@@ -280,22 +266,21 @@ public class ProductController {
         return new ResponseEntity<>("Success. Back to page Login",HttpStatus.OK);
     }
 
+    @GetMapping("/admin/getAllCart")
+    public ResponseEntity<?> getAllCart(){
+        List<Cart> cartList = cartService.findAll();
+        return new ResponseEntity<>(cartList,HttpStatus.OK);
+    }
+
     @PostMapping("/user/changePw")
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO){
-        System.out.println("/////////////////////");
         Optional<Account> account = accountService.findByEmail(changePasswordDTO.getEmail());
-        System.out.println(changePasswordDTO.getEmail());
-        System.out.println(account);
         AuthenticationRequest authenticationRequest = new AuthenticationRequest(changePasswordDTO.getEmail(),changePasswordDTO.getPassword());
         if (account.isPresent()){
-            System.out.println("-------------------");
-            System.out.println(accountService.checkLogin(authenticationRequest));
-
             if (accountService.checkLogin(authenticationRequest)){
                 if (applicationConfig.passwordEncoder().matches(changePasswordDTO.getNewPassword(),account.get().getPassword())){
                     return new ResponseEntity<>("Password duplicate",HttpStatus.OK);
                 }
-                System.out.println("/aaaaaaaáa");
                 account.get().setPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
                 accountService.save(account.get());
                 return new ResponseEntity<>(true,HttpStatus.OK);

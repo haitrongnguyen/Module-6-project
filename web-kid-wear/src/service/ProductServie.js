@@ -320,6 +320,19 @@ export const checkQuantity = async (cartId, accessToken) => {
     }
 }
 
+export const getAllCartAdmin = async (accessToken) => {
+    try {
+        let rs = await axios.get(`http://localhost:8080/api/admin/getAllCart`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
+        return rs.data
+    } catch (e) {
+        console.log(e);;
+    }
+}
+
 
 
 

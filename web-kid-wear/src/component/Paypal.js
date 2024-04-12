@@ -24,7 +24,7 @@ const Paypal = (props) => {
                 onApprove: async (data, actions) => {
                     console.log(id, amount, accessToken);
                     await service.handleSuccess(id, amount, accessToken);
-                    navigate(`/`)
+                    navigate(`/history`)
                     // swal({
                     //     title: "Notification",
                     //     text: "You have successfully paid!",

@@ -135,11 +135,11 @@ const Hompage = () => {
 
     const handlePush = async (value) => {
         if (accessToken) {
+            console.log(value.id, value.name);
             console.log("dang goi api");
-            console.log(value);
-            let res = await service.addToCart(value, userIdSt, 1, accessToken);
+            let res = await service.addToCart(value.id, userIdSt, 1, accessToken);
             console.log(res);
-            toast.success('Add to cart successfully!', {
+            toast.success(`Add product ${value.name} to cart successfully!`, {
                 autoClose: 3000 // Tự đóng sau 3 giây (3000 ms)
             });
 
@@ -346,7 +346,7 @@ const Hompage = () => {
                                                         <div style={{ display: "flex", justifyContent: "space-between" }}>
                                                             <span style={{ color: "red", fontSize: "30px", paddingTop: '10px' }}>{product.price}$</span>
                                                             {product.quantity ? (
-                                                                <button className="btn-submit" value={product.id} onClick={(event) => handlePush(event.target.value)} style={{ background: "rgb(113,192,239)" }}>
+                                                                <button className="btn-submit" onClick={() => handlePush(product)} style={{ background: "rgb(113,192,239)" }}>
                                                                     Add to cart
                                                                 </button>
 

@@ -9,6 +9,7 @@ import Footer from './Footer';
 
 const ChangePassword = () => {
     const id = useParams()
+    const userId = sessionStorage.getItem('userId')
     const navigate = useNavigate()
     const [account, setAccount] = useState({})
     const accessToken = sessionStorage.getItem('accessToken');
@@ -85,7 +86,7 @@ const ChangePassword = () => {
                     <div role="navigation" aria-label="Breadcrumbs" class="breadcrumb-trail breadcrumbs">
                         <ul class="trail-items breadcrumb">
                             <li class="trail-item trail-begin"><Link to={'/'}>Home</Link></li>
-                            <li class="trail-item trail-end active"><span>Change Password</span>
+                            <li class="trail-item trail-end active"><Link to={'/changePassword'}></Link><span>Change Password</span>
                             </li>
                         </ul>
                     </div>
@@ -99,19 +100,19 @@ const ChangePassword = () => {
                             <h3>Menu</h3>
                             <ul className="nav flex-column">
                                 <li className="nav-item product-remove">
-                                    <a className="nav-link active " href="#">
+                                    <Link className="nav-link active " to={`/account/${userId}`}>
                                         Account Detail
-                                    </a>
+                                    </Link>
                                 </li>
                                 <li className="nav-item product-remove">
-                                    <Link className="nav-link" to={'/changPassword'}>
+                                    <Link className="nav-link" to={'/changePassword'}>
                                         Change Password
                                     </Link>
                                 </li>
                                 <li className="nav-item product-remove">
-                                    <a className="nav-link" href="#">
+                                    <Link to={'/history'} className="nav-link" href="#">
                                         History Booking
-                                    </a>
+                                    </Link>
                                 </li>
                             </ul>
                         </div>

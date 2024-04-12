@@ -51,4 +51,9 @@ public class CartService implements ICartService{
         context.setVariable("account",account);
         accountService.sendEmailWithHtmlTemplate(to,subject,templateName,context);
     }
+
+    @Override
+    public List<Cart> findAll() {
+        return cartRepository.findAll();
+    }
 }

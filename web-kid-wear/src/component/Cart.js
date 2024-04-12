@@ -304,6 +304,7 @@ const Cart = () => {
                                                     <a
                                                         onClick={() => handleCheck(cartId)}
                                                         className="checkout-button button alt kodory-forward"
+                                                        style={{ color: 'white' }}
                                                     >
                                                         Proceed to checkout
                                                     </a>

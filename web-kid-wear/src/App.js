@@ -12,6 +12,7 @@ import CreateProduct from './component/admin/CreateProduct';
 import HistoryCart from './component/HistoryCart';
 import Edit from './component/admin/Edit';
 import ChangePassword from './component/ChangePassword';
+import Order from './component/admin/Order';
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
       <Route path='/history' element={<HistoryCart />}></Route>
       <Route path='/admin/edit/:id' element={<Edit />}></Route>
       <Route path='/changePassword/:id' element={<ChangePassword />}></Route>
+      <Route path='/order' element={<Order />}></Route>
 
 
     </Routes>

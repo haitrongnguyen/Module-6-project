@@ -15,4 +15,6 @@ public interface ICartService {
     List<Cart> findAllByAccountId(Long id);
 
     void sendMail(Account account, Cart cart);
+
+    List<Cart> findAll();
 }

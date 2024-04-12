@@ -20,4 +20,6 @@ public interface CartRepository extends JpaRepository<Cart,Long> {
 
     @Query(value = "select * from cart where account_id = :id order by cart.create_date desc", nativeQuery = true)
     List<Cart> findAllCartByAccountId(@Param("id") Long id);
+
+    List<Cart> getAllByOrderByCreateDateDesc();
 }

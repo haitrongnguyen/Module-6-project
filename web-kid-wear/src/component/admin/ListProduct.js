@@ -115,7 +115,7 @@ const ListProduct = () => {
                                     </NavLink>
                                 </li>
                                 <li className="nav-item product-remove">
-                                    <NavLink className="nav-link">
+                                    <NavLink to={'/order'} className="nav-link">
                                         Oder
                                     </NavLink>
                                 </li>
